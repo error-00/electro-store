@@ -1,4 +1,5 @@
 {% load static %}
+{% load goods_tags %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -68,8 +69,8 @@
 						<!-- SEARCH BAR -->
 						<div class="col-md-6">
 							<div class="header-search">
-								<form>
-									<input class="input" placeholder="Search here">
+								<form action="{% url "goods:search" %}" method="GET">
+									<input class="input" type="search" name="q" placeholder="Search here">
 									<button class="search-btn">Search</button>
 								</form>
 							</div>

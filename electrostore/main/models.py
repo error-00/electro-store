@@ -12,6 +12,9 @@ class Category(models.Model):
 
     def __str__(self) -> str:
         return self.name
+    
+    def product_count(self):
+        return self.product_set.count()
 
 
 class Product(models.Model):
@@ -42,7 +45,6 @@ class Product(models.Model):
         ratings = self.ratings.all()
         if ratings:
             rating = int(sum(rating.value for rating in ratings) / ratings.count())
-            print(rating)
             return rating
         return 0
 

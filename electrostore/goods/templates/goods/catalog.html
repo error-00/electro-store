@@ -1,0 +1,160 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load custom_filters %}
+{% load goods_tags %}
+
+{% block content %}
+  <!-- SECTION -->
+  <div class="section">
+    <!-- container -->
+    <div class="container">
+      <!-- row -->
+      <div class="row">
+        <!-- ASIDE -->
+        <div id="aside" class="col-md-3">
+          <!-- aside Widget -->
+          <div class="aside">
+            <h3 class="aside-title">Categories</h3>
+            <div class="checkbox-filter">
+              <div class="input-checkbox">
+                <a href="{% url 'goods:catalog' 'all' %}">
+                  <span></span>
+                  ALL
+                  <small>({{ total_count }})</small>
+                </a>
+              </div>
+              {% for category in categories %}
+                <div class="input-checkbox">
+                  <a href="{% url 'goods:catalog' category.slug %}">
+                    <span></span>
+                    {{ category.name }}
+                    <small>({{ category.product_count }})</small>
+                  </a>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+          <!-- /aside Widget -->
+          <br /><br />
+          <!-- aside Widget -->
+          <div class="aside">
+            <h3 class="aside-title">Top selling</h3>
+            {% for product in top_sellings %}
+              <div class="product-widget">
+                <div class="product-img">
+                  <img src="{{ product.images.first.image.url }}" alt="{{ product.name }}" />
+                </div>
+                <div class="product-body">
+                  <p class="product-category">{{ product.category.name }}</p>
+                  <h3 class="product-name"><a href="{% url 'goods:product' product.slug %}">{{ product.name }}</a></h3>
+                  <h4 class="product-price">
+                    ${{ product.sell_price|add_spaces }} {% if product.discount %}
+                      <del class="product-old-price">${{ product.price|add_spaces }}</del>
+                    {% endif %}
+                  </h4>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+          <!-- /aside Widget -->
+        </div>
+        <!-- /ASIDE -->
+
+        <!-- STORE -->
+        <div id="store" class="col-md-9">
+          <!-- store top filter -->
+          <div class="store-filter clearfix">
+            <div class="store-sort">
+              <label>
+                Sort By:<select class="input-select">
+                  <option value="0">Popular</option>
+                  <option value="1">Position</option>
+                </select>
+              </label>
+
+              <label>
+                Show:<select class="input-select">
+                  <option value="0">20</option>
+                  <option value="1">50</option>
+                </select>
+              </label>
+            </div>
+          </div>
+          <!-- /store top filter -->
+
+          <!-- store products -->
+          <div class="row">
+            {% for product in goods %}
+              <!-- product -->
+              <div class="col-md-4 col-xs-6">
+                <div class="product">
+                  <div class="product-img">
+                    <img src="{{ product.images.first.image.url }}" alt="{{ product.name }}" />
+                    <div class="product-label">
+                      {% if product.discount %}
+                        <span class="sale">-{{ product.discount|floatformat:0 }}%</span>
+                      {% endif %}
+                    </div>
+                  </div>
+                  <div class="product-body">
+                    <p class="product-category">{{ product.category.name }}</p>
+                    <h3 class="product-name"><a href="{% url 'goods:product' product.slug %}">{{ product.name }}</a></h3>
+                    <h4 class="product-price">
+                      ${{ product.sell_price|add_spaces }} {% if product.discount %}
+                        <del class="product-old-price">${{ product.price|add_spaces }}</del>
+                      {% endif %}
+                    </h4>
+                    <div class="product-rating">
+                      {% for i in '12345' %}
+                        {% if forloop.counter <= product.average_rating %}
+                          <i class="fa fa-star"></i>
+                        {% else %}
+                          <i class="fa fa-star-o"></i>
+                        {% endif %}
+                      {% endfor %}
+                    </div>
+                  </div>
+                  <div class="add-to-cart">
+                    <button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button>
+                  </div>
+                </div>
+              </div>
+              <!-- /product -->
+            {% endfor %}
+          </div>
+          <!-- /store products -->
+
+          <!-- store bottom filter -->
+          {% if goods %}
+          <div class="store-filter clearfix">
+            <ul class="store-pagination">
+            {% if goods.has_previous %}
+              <li>
+                <a href="?{% change_params page=goods.previous_page_number %}"><i class="fa fa-angle-left"></i></a>
+              </li>
+            {% endif %}
+            {% for page in goods.paginator.page_range %}
+            {% if page >= goods.number|add:-2 and page <= goods.number|add:2 %}
+              <li class="{% if goods.number == page %}active{% endif %}">
+                <a href="?{% change_params page=page %}">{{page}}</a>
+              </li>
+            {% endif %}
+            {% endfor %}
+            {% if goods.has_next %}
+              <li>
+                <a href="?{% change_params page=goods.next_page_number %}"><i class="fa fa-angle-right"></i></a>
+              </li>
+            {% endif %}
+            </ul>
+          </div>
+          {% endif %}
+          <!-- /store bottom filter -->
+        </div>
+        <!-- /STORE -->
+      </div>
+      <!-- /row -->
+    </div>
+    <!-- /container -->
+  </div>
+  <!-- /SECTION -->
+{% endblock %}
