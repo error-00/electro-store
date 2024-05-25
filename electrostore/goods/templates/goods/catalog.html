@@ -63,24 +63,32 @@
         <!-- STORE -->
         <div id="store" class="col-md-9">
           <!-- store top filter -->
-          <div class="store-filter clearfix">
-            <div class="store-sort">
-              <label>
-                Sort By:<select class="input-select">
-                  <option value="0">Popular</option>
-                  <option value="1">Position</option>
-                </select>
-              </label>
-
-              <label>
-                Show:<select class="input-select">
-                  <option value="0">20</option>
-                  <option value="1">50</option>
-                </select>
-              </label>
+          <form action="{% if request.get.q %}
+                        {% url 'goods:search' %}
+                      {% else %}
+                        {% url 'goods:catalog' slug_url %}
+                      {% endif %}"
+                method="get">
+            <div class="store-filter clearfix">
+              <div class="store-sort">
+                {% if request.get.q %}
+                <input type="hidden" name="q" value="{{ request.get.q }}">
+                {% endif %}
+                <label>
+                  Sort By:
+                  <select class="input-select" name="sort" onchange="this.form.submit()">
+                    <option value="0" {% if current_sort == '0' %}selected{% endif %}>Popular</option>
+                    <option value="1" {% if current_sort == '1' %}selected{% endif %}>Price: Low to High</option>
+                    <option value="2" {% if current_sort == '2' %}selected{% endif %}>Price: High to Low</option>
+                    <option value="3" {% if current_sort == '3' %}selected{% endif %}>Discount</option>
+                  </select>
+                </label>
+              </div>
             </div>
-          </div>
+          </form>
           <!-- /store top filter -->
+
+
 
           <!-- store products -->
           <div class="row">
@@ -126,29 +134,30 @@
 
           <!-- store bottom filter -->
           {% if goods %}
-          <div class="store-filter clearfix">
-            <ul class="store-pagination">
-            {% if goods.has_previous %}
-              <li>
-                <a href="?{% change_params page=goods.previous_page_number %}"><i class="fa fa-angle-left"></i></a>
-              </li>
-            {% endif %}
-            {% for page in goods.paginator.page_range %}
-            {% if page >= goods.number|add:-2 and page <= goods.number|add:2 %}
-              <li class="{% if goods.number == page %}active{% endif %}">
-                <a href="?{% change_params page=page %}">{{page}}</a>
-              </li>
-            {% endif %}
-            {% endfor %}
-            {% if goods.has_next %}
-              <li>
-                <a href="?{% change_params page=goods.next_page_number %}"><i class="fa fa-angle-right"></i></a>
-              </li>
-            {% endif %}
-            </ul>
-          </div>
+            <div class="store-filter clearfix">
+              <ul class="store-pagination">
+                {% if goods.has_previous %}
+                  <li>
+                    <a href="?{% change_params page=goods.previous_page_number %}"><i class="fa fa-angle-left"></i></a>
+                  </li>
+                {% endif %}
+                {% for page in goods.paginator.page_range %}
+                  {% if page >= goods.number|add:-2 and page <= goods.number|add:2 %}
+                    <li class="{% if goods.number == page %}active{% endif %}">
+                      <a href="?{% change_params page=page %}">{{ page }}</a>
+                    </li>
+                  {% endif %}
+                {% endfor %}
+                {% if goods.has_next %}
+                  <li>
+                    <a href="?{% change_params page=goods.next_page_number %}"><i class="fa fa-angle-right"></i></a>
+                  </li>
+                {% endif %}
+              </ul>
+            </div>
           {% endif %}
           <!-- /store bottom filter -->
+
         </div>
         <!-- /STORE -->
       </div>

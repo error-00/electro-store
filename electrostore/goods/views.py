@@ -1,19 +1,42 @@
-from django.shortcuts import get_list_or_404, render
+from django.shortcuts import render
 from main.models import Product, Category
-from django.db.models import Avg
+from django.db.models import Avg, F, ExpressionWrapper, DecimalField
 from django.core.paginator import Paginator
 from goods.utils import q_search
 
 
 def catalog(request, category_slug=None):
-    page = request.GET.get('page', 1)
-    query = request.GET.get('q', None)
+    page = request.GET.get("page", 1)
+    query = request.GET.get("q", None)
+    sort_option = request.GET.get("sort", None)
+
     if category_slug == "all":
         goods = Product.objects.all()
     elif query:
         goods = q_search(query)
     else:
-        goods = get_list_or_404(Product.objects.filter(category__slug=category_slug))
+        goods = Product.objects.filter(category__slug=category_slug)
+
+    if sort_option == "0":  # Popular
+        goods = goods.annotate(average_rating=Avg("ratings__value")).order_by(
+            "-average_rating"
+        )
+    elif sort_option == "1":  # Price: Low to High
+        goods = goods.annotate(
+            sell_price=ExpressionWrapper(
+                F("price") - F("price") * F("discount") / 100,
+                output_field=DecimalField(max_digits=7, decimal_places=2),
+            )
+        ).order_by("sell_price")
+    elif sort_option == "2":  # Price: High to Low
+        goods = goods.annotate(
+            sell_price=ExpressionWrapper(
+                F("price") - F("price") * F("discount") / 100,
+                output_field=DecimalField(max_digits=7, decimal_places=2),
+            )
+        ).order_by("-sell_price")
+    elif sort_option == "3":  # Discount
+        goods = goods.filter(discount__gt=0)
 
     categories = Category.objects.all()
     top_sellings = (
@@ -32,6 +55,7 @@ def catalog(request, category_slug=None):
         "categories": categories,
         "top_sellings": top_sellings,
         "total_count": total_count,
+        "slug_url": category_slug,
     }
     return render(request, "goods/catalog.html", context)
 
