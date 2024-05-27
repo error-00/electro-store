@@ -47,7 +47,7 @@
 						{% if not user.is_authenticated %}
 						<li><a href="{% url "users:login" %}"><i class="fa fa-sign-out"></i> Log In</a></li>
 						{% else %}
-						<li><a href="#"><i class="fa fa-user-o"></i> {{user.username}}</a></li>
+						<li><a href="{% url "users:profile" %}"><i class="fa fa-user-o"></i> {{user.username}}</a></li>
 						<li><a href="{% url "users:logout" %}"><i class="fa fa-sign-out"></i> Log Out</a></li>
 						{% endif %}
 					</ul>

@@ -1,8 +1,9 @@
 from django.shortcuts import render, HttpResponseRedirect
 from django.urls import reverse
 from main.models import Category
-from .forms import UserLoginForm, UserRegistrationForm
+from .forms import UserLoginForm, UserRegistrationForm, ProfileForm
 from django.contrib import auth
+from django.contrib.auth.decorators import login_required
 
 
 def login(request):
@@ -39,6 +40,27 @@ def registration(request):
     return render(request, "users/registration.html", context)
 
 
+@login_required
+def profile(request):
+    categories = Category.objects.all()
+
+    if request.method == "POST":
+        form = ProfileForm(data=request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse("users:profile"))
+    else:
+        form = ProfileForm(instance=request.user)
+
+    context = {
+        "title": f"Profile - {request.user.username}",
+        "categories": categories,
+        "form": form,
+    }
+    return render(request, "users/profile.html", context)
+
+
+@login_required()
 def logout(request):
     auth.logout(request)
     return HttpResponseRedirect(reverse("main:index"))
