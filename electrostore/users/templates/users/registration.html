@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+  <!-- SECTION -->
+  <div class="section">
+    <!-- container -->
+    <div class="container">
+      <!-- row -->
+      <div class="row">
+        <div class="col-md-7">
+          <!-- Login Details -->
+          <div class="billing-details">
+            <div class="section-title">
+              <h3 class="title">SIGN IN</h3>
+            </div>
+            <form action="{% url 'users:registration' %}" method="POST">
+              {% csrf_token %}
+              {% if form.non_field_errors %}
+                <p>{{ form.non_field_errors }}</p>
+              {% endif %}
+              <div class="form-group">
+                <input class="input" type="text" name="first_name" id="id_first_name" placeholder="First Name" required />
+              </div>
+              {% if form.first_name.errors %}
+                <div class="alert alert-danger alert-dismissible fade show">{{ form.first_name.errors }}</div>
+              {% endif %}
+              <div class="form-group">
+                <input class="input" type="text" name="last_name" id="id_last_name" placeholder="Last Name" required />
+              </div>
+              {% if form.last_name.errors %}
+                <div class="alert alert-danger alert-dismissible fade show">{{ form.last_name.errors }}</div>
+              {% endif %}
+              <div class="form-group">
+                <input class="input" type="text" name="username" id="id_username" placeholder="Username" required />
+              </div>
+              {% if form.username.errors %}
+                <div class="alert alert-danger alert-dismissible fade show">{{ form.username.errors }}</div>
+              {% endif %}
+              <div class="form-group">
+                <input class="input" type="email" name="email" id="id_email" placeholder="Email" required />
+              </div>
+              {% if form.email.errors %}
+                <div class="alert alert-danger alert-dismissible fade show">{{ form.email.errors }}</div>
+              {% endif %}
+              <div class="form-group">
+                <input class="input" type="password" name="password1" id="id_password1" placeholder="Password" required />
+              </div>
+              {% if form.password1.errors %}
+                <div class="alert alert-danger alert-dismissible fade show">{{ form.password1.errors }}</div>
+              {% endif %}
+              <div class="form-group">
+                <input class="input" type="password" name="password2" id="id_password2" placeholder="Password Again" required />
+              </div>
+              {% if form.password2.errors %}
+                <div class="alert alert-danger alert-dismissible fade show">{{ form.password2.errors }}</div>
+              {% endif %}
+              <button type="submit" class="primary-btn order-submit">SIGN IN</button>
+            </form>
+            <br />
+            <a class="primary-btn order-submit" style="background-color: blue;" href="{% url 'users:registration' %}">Log in</a>
+          </div>
+          <!-- /Login Details -->
+        </div>
+      </div>
+      <!-- /row -->
+    </div>
+    <!-- /container -->
+  </div>
+  <!-- /SECTION -->
+{% endblock %}
