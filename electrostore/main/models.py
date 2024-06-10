@@ -1,3 +1,4 @@
+from tkinter import CASCADE
 from django.db import models
 from users.models import User
 
@@ -71,3 +72,17 @@ class Rating(models.Model):
 
     def __str__(self):
         return f"{self.value} stars for {self.product.name} by {self.user}"
+
+
+class Review(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    body = models.TextField(blank=True, null=True)
+    rating = models.ForeignKey(Rating, on_delete=models.CASCADE, blank=True, null=True)
+    created = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ("-created",)
+    
+    def __str__(self) -> str:
+        return self.body

@@ -124,7 +124,7 @@
                 <a data-toggle="tab" href="#tab1">Description</a>
               </li>
               <li>
-                <a data-toggle="tab" href="#tab3">Reviews (3)</a>
+                <a data-toggle="tab" href="#tab3">Reviews ({{count_reviews}})</a>
               </li>
             </ul>
             <!-- /product tab nav -->
@@ -167,10 +167,11 @@
                   <div class="col-md-6">
                     <div id="reviews">
                       <ul class="reviews">
+                        {% for review in reviews %}
                         <li>
                           <div class="review-heading">
-                            <h5 class="name">John</h5>
-                            <p class="date">27 DEC 2018, 8:0 PM</p>
+                            <h5 class="name">{{review.user.username}}</h5>
+                            <p class="date">{{review.created}}</p>
                             <div class="review-rating">
                               <i class="fa fa-star"></i>
                               <i class="fa fa-star"></i>
@@ -180,41 +181,10 @@
                             </div>
                           </div>
                           <div class="review-body">
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua</p>
+                            <p>{{review.body}}</p>
                           </div>
                         </li>
-                        <li>
-                          <div class="review-heading">
-                            <h5 class="name">John</h5>
-                            <p class="date">27 DEC 2018, 8:0 PM</p>
-                            <div class="review-rating">
-                              <i class="fa fa-star"></i>
-                              <i class="fa fa-star"></i>
-                              <i class="fa fa-star"></i>
-                              <i class="fa fa-star"></i>
-                              <i class="fa fa-star-o empty"></i>
-                            </div>
-                          </div>
-                          <div class="review-body">
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua</p>
-                          </div>
-                        </li>
-                        <li>
-                          <div class="review-heading">
-                            <h5 class="name">John</h5>
-                            <p class="date">27 DEC 2018, 8:0 PM</p>
-                            <div class="review-rating">
-                              <i class="fa fa-star"></i>
-                              <i class="fa fa-star"></i>
-                              <i class="fa fa-star"></i>
-                              <i class="fa fa-star"></i>
-                              <i class="fa fa-star-o empty"></i>
-                            </div>
-                          </div>
-                          <div class="review-body">
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua</p>
-                          </div>
-                        </li>
+                        {% endfor %}
                       </ul>
                       <ul class="reviews-pagination">
                         <li class="active">1</li>
@@ -238,10 +208,10 @@
                   <!-- Review Form -->
                   <div class="col-md-3">
                     <div id="review-form">
-                      <form class="review-form">
-                        <input class="input" type="text" placeholder="Your Name" />
-                        <input class="input" type="email" placeholder="Your Email" />
-                        <textarea class="input" placeholder="Your Review"></textarea>
+                      {% if user.is_authenticated %}
+                      <form class="review-form" action="{% url 'goods:product' product.slug %}" method="POST">
+                        {% csrf_token %}
+                        <textarea class="input" placeholder="Your Review" id="id_body" name="body"></textarea>
                         <div class="input-rating">
                           <span>Your Rating:</span>
                           <div class="stars">
@@ -254,6 +224,10 @@
                         </div>
                         <button class="primary-btn">Submit</button>
                       </form>
+                      {% else %}
+                      Log in for writing review - 
+                      <a href="{% url "users:login" %}">LOGIN</a>
+                      {% endif %}
                     </div>
                   </div>
                   <!-- /Review Form -->

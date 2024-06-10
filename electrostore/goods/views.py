@@ -1,5 +1,5 @@
-from django.shortcuts import render
-from main.models import Product, Category
+from django.shortcuts import redirect, render
+from main.models import Product, Category, Review
 from django.db.models import Avg, F, ExpressionWrapper, DecimalField
 from django.core.paginator import Paginator
 from goods.utils import q_search
@@ -64,12 +64,22 @@ def product(request, product_slug):
     product = Product.objects.get(slug=product_slug)
     categories = Category.objects.all()
     related_products = Product.objects.filter(category=product.category)
+    reviews = Review.objects.filter(product=product.id)
+
+    if request.method == "POST":
+        review = Review.objects.create(
+            user=request.user, product=product, body=request.POST.get("body")
+        )
+
+        return redirect(request.META["HTTP_REFERER"])
 
     context = {
         "title": product.name,
         "product": product,
         "categories": categories,
         "related_products": related_products,
+        "reviews": reviews,
+        "count_reviews": len(list(reviews))
     }
 
     return render(request, "goods/product.html", context)
