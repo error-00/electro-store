@@ -61,6 +61,9 @@ def catalog(request, category_slug=None):
 
 
 def product(request, product_slug):
+    # Pagination
+    page = request.GET.get('page', 1)
+
     product = Product.objects.get(slug=product_slug)
     categories = Category.objects.all()
     related_products = Product.objects.filter(category=product.category)
@@ -84,13 +87,16 @@ def product(request, product_slug):
 
         return redirect(request.META["HTTP_REFERER"])
     
+    paginator = Paginator(reviews, 3)
+    current_page = paginator.page(int(page))
+    
 
     context = {
         "title": product.name,
         "product": product,
         "categories": categories,
         "related_products": related_products,
-        "reviews": reviews,
+        "reviews": current_page,
         "count_reviews": reviews.count()
     }
 

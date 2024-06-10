@@ -162,7 +162,7 @@
                     </div>
                   </div>
                   <!-- /Rating -->
-
+                  
                   <!-- Reviews -->
                   <div class="col-md-6">
                     <div id="reviews">
@@ -188,21 +188,29 @@
                         </li>
                         {% endfor %}
                       </ul>
+                      {% if reviews %}
                       <ul class="reviews-pagination">
-                        <li class="active">1</li>
-                        <li>
-                          <a href="#">2</a>
+                        <li class="{% if not reviews.has_previous %}disabled{% endif %}">
+                          <a href="{% if reviews.has_previous %}?{% change_params page=reviews.previous_page_number %}{% else %}#{% endif %}">
+                          <i class="fa fa-angle-left"></i>
+                          </a>
                         </li>
-                        <li>
-                          <a href="#">3</a>
+
+                        {% for page in reviews.paginator.page_range%}
+                        {% if page >= reviews.number|add:-2 and page <= reviews.number|add:2 %}
+                        <li class="{% if reviews.number == page%} active {% endif %}">
+                          <a href="?{% change_params page=page %}">{{page}}</a>
                         </li>
-                        <li>
-                          <a href="#">4</a>
-                        </li>
-                        <li>
-                          <a href="#"><i class="fa fa-angle-right"></i></a>
+                        {% endif %}
+                        {% endfor %}
+
+                        <li class="{% if not reviews.has_next %}disabled{% endif %}">
+                          <a href="{% if reviews.has_next %}?{% change_params page=reviews.next_page_number %}{% else %}#{% endif %}">
+                          <i class="fa fa-angle-right"></i>
+                          </a>
                         </li>
                       </ul>
+                      {% endif %}
                     </div>
                   </div>
                   <!-- /Reviews -->
