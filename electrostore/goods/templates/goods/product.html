@@ -93,18 +93,17 @@
             <p>{{ product.little_description }}</p>
             <br />
 
-            <div class="add-to-cart">
-              <div class="qty-label">
-                Qty<div class="input-number">
-                  <input type="number" />
-                  <span class="qty-up">+</span>
-                  <span class="qty-down">-</span>
+            <form method="post" action="{% url 'cart:cart_add' product.slug %}">
+              {% csrf_token %}
+              <div class="add-to-cart">
+                <div class="qty-label">
+                  Qty<div class="input-number">
+                    <input type="number" name="quantity" class="qty" min="1" />
+                  </div>
                 </div>
+                <a href="{% url 'cart:cart_add' product.slug %}"><button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button></a>
               </div>
-              <a href="{% url "cart:cart_add" product.slug %}">
-              <button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button>
-            </a>
-            </div>
+            </form>
 
             <ul class="product-links">
               <li>Category:</li>
@@ -299,16 +298,14 @@
               </div>
               <div class="product-body">
                 <p class="product-category">{{ product.category }}</p>
-                <h3 class="product-name"><a href="{% url "goods:product" product.slug %}">{{ product.name }}</a></h3>
+                <h3 class="product-name"><a href="{% url 'goods:product' product.slug %}">{{ product.name }}</a></h3>
                 <h4 class="product-price">
                   ${{ product.sell_price|add_spaces }} {% if product.discount %}
                     <del class="product-old-price">${{ product.price|add_spaces }}</del>
                   {% endif %}
                 </h4>
               </div>
-              <div class="add-to-cart">
-                <button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button>
-              </div>
+              <a class="add-to-cart" href="{% url 'cart:cart_add' product.slug %}"><button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button></a>
             </div>
           </div>
           <!-- /product -->

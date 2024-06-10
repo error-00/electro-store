@@ -9,7 +9,14 @@
       </div>
       <div class="product-body">
         <h3 class="product-name"><a href="{% url 'goods:product' cart.product.slug %}">{{ cart.product.name }}</a></h3>
-        <h4 class="product-price"><span class="qty">{{ cart.quantity }}x</span>${{ cart.products_price|add_spaces }}</h4>
+        <h4 class="product-price">
+          <form method="post" action="{% url 'cart:cart_change' cart.id %}">
+            {% csrf_token %}
+            <input type="number" name="quantity" class="qty" value="{{ cart.quantity }}" min="1" style="max-width:50px;" />
+            <button type="submit" class="update-quantity-btn">Update</button>
+          </form>
+          <br>
+        x ${{ cart.product.sell_price|add_spaces }} = ${{ cart.products_price|add_spaces }}</h4>
       </div>
       <a class="delete" href="{% url 'cart:cart_remove' cart.id %}"><i class="fa fa-close"></i></a>
     </div>
