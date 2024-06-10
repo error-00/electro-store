@@ -17,7 +17,7 @@
             <form action="{% url 'users:registration' %}" method="POST">
               {% csrf_token %}
               {% if form.non_field_errors %}
-                <p>{{ form.non_field_errors }}</p>
+                <div class="alert alert-primary" role="alert">{{ form.non_field_errors }}</div>
               {% endif %}
               <div class="form-group">
                 <input class="input" type="text" name="first_name" id="id_first_name" placeholder="First Name" required />
@@ -58,7 +58,7 @@
               <button type="submit" class="primary-btn order-submit">SIGN IN</button>
             </form>
             <br />
-            <a class="primary-btn order-submit" style="background-color: blue;" href="{% url 'users:registration' %}">Log in</a>
+            <a class="primary-btn order-submit" style="background-color: blue;" href="{% url 'users:login' %}">Log in</a>
           </div>
           <!-- /Login Details -->
         </div>

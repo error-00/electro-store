@@ -32,6 +32,9 @@ def cart_add(request, product_slug):
             Cart.objects.create(
                 session_key=request.session.session_key, product=product, quantity=1
             )
+    
+    if not request.session.session_key:
+        request.session.create()
 
     return redirect(request.META["HTTP_REFERER"])
 
@@ -39,4 +42,8 @@ def cart_add(request, product_slug):
 def cart_change(request): ...
 
 
-def cart_remove(request): ...
+def cart_remove(request, cart_id):
+    cart = Cart.objects.get(id=cart_id)
+    cart.delete()
+
+    return redirect(request.META["HTTP_REFERER"])

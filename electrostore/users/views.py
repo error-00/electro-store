@@ -4,6 +4,7 @@ from main.models import Category
 from .forms import UserLoginForm, UserRegistrationForm, ProfileForm
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
+from carts.models import Cart
 
 
 def login(request):
@@ -15,11 +16,18 @@ def login(request):
             username = request.POST["username"]
             password = request.POST["password"]
             user = auth.authenticate(username=username, password=password)
+
+            session_key = request.session.session_key
             if user:
                 auth.login(request, user)
-                return HttpResponseRedirect(reverse("main:index"))
 
-    context = {"title": "Login", "categories": categories}
+                if session_key:
+                    Cart.objects.filter(session_key=session_key).update(user=user)
+                return HttpResponseRedirect(reverse("main:index"))
+    else:
+        form = UserLoginForm()
+
+    context = {"title": "Login", "categories": categories, "form": form}
     return render(request, "users/login.html", context)
 
 
@@ -36,7 +44,7 @@ def registration(request):
     else:
         form = UserRegistrationForm()
 
-    context = {"title": "Sign In", "categories": categories}
+    context = {"title": "Sign In", "categories": categories, "form": form}
     return render(request, "users/registration.html", context)
 
 
