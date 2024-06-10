@@ -1,5 +1,5 @@
 from django.shortcuts import redirect, render
-from main.models import Product, Category, Review
+from main.models import Product, Category, Review, Rating
 from django.db.models import Avg, F, ExpressionWrapper, DecimalField
 from django.core.paginator import Paginator
 from goods.utils import q_search
@@ -67,11 +67,23 @@ def product(request, product_slug):
     reviews = Review.objects.filter(product=product.id)
 
     if request.method == "POST":
+        if request.POST.get("rating"):
+            rating_value = int(request.POST.get("rating"))
+            rating, created = Rating.objects.get_or_create(
+                user=request.user, product=product, defaults={'value': rating_value}
+            )
+            if not created:
+                rating.value = rating_value
+                rating.save()
+        else:
+            rating = None
+        
         review = Review.objects.create(
-            user=request.user, product=product, body=request.POST.get("body")
+            user=request.user, product=product, body=request.POST.get("body"), rating=rating
         )
 
         return redirect(request.META["HTTP_REFERER"])
+    
 
     context = {
         "title": product.name,
@@ -79,7 +91,7 @@ def product(request, product_slug):
         "categories": categories,
         "related_products": related_products,
         "reviews": reviews,
-        "count_reviews": len(list(reviews))
+        "count_reviews": reviews.count()
     }
 
     return render(request, "goods/product.html", context)

@@ -173,11 +173,13 @@
                             <h5 class="name">{{review.user.username}}</h5>
                             <p class="date">{{review.created}}</p>
                             <div class="review-rating">
-                              <i class="fa fa-star"></i>
-                              <i class="fa fa-star"></i>
-                              <i class="fa fa-star"></i>
-                              <i class="fa fa-star"></i>
-                              <i class="fa fa-star-o empty"></i>
+                              {% for i in '12345' %}
+                              {% if forloop.counter <= review.rating.value %}
+                                <i class="fa fa-star"></i>
+                              {% else %}
+                                <i class="fa fa-star-o"></i>
+                              {% endif %}
+                            {% endfor %}
                             </div>
                           </div>
                           <div class="review-body">
