@@ -32,6 +32,7 @@
 
     <!-- Custom stlylesheet -->
     <link type="text/css" rel="stylesheet" href="{% static 'css/style.css' %}" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   </head>
   <body>
     <!-- HEADER -->
@@ -107,7 +108,7 @@
                     {% include 'carts/includes/included_cart.html' %}
                     <div class="cart-btns">
                       <a href="{% url "users:profile" %}">View Cart</a>
-                      <a href="#">Checkout <i class="fa fa-arrow-circle-right"></i></a>
+                      <a href="{% url "orders:create_order" %}">Checkout <i class="fa fa-arrow-circle-right"></i></a>
                     </div>
                   </div>
                 </div>
@@ -231,13 +232,10 @@
                 <h3 class="footer-title">Service</h3>
                 <ul class="footer-links">
                   <li>
-                    <a href="#">My Account</a>
+                    <a href="{% url "users:profile" %}">My Account</a>
                   </li>
                   <li>
-                    <a href="#">View Cart</a>
-                  </li>
-                  <li>
-                    <a href="#">Track My Order</a>
+                    <a href="{% url "users:profile" %}">View Cart</a>
                   </li>
                   <li>
                     <a href="#">Help</a>
