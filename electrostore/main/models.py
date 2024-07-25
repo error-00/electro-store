@@ -71,7 +71,7 @@ class Rating(models.Model):
         unique_together = ("product", "user")  # one user one mark
 
     def __str__(self):
-        return f"{self.value} stars for {self.product.name} by {self.user}"
+        return f"{self.value}"
 
 
 class Review(models.Model):
