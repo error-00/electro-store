@@ -14,7 +14,7 @@ Electro Store is an online store built with Django and PostgreSQL. It features a
 ## Technologies Used
 
 - **Backend**: Django
-- **Database**: PostgreSQL
+- **Database**: SQLite
 - **Frontend**: HTML, CSS, JavaScript
 
 ## Installation
@@ -38,20 +38,17 @@ To get started with Electro Store, follow these steps:
    pip install -r requirements.txt
    ```
 
-4. **Configure the database:**
-   Set up PostgreSQL and update the database settings in `settings.py` with your database credentials.
-
-5. **Apply migrations:**
+4. **Apply migrations:**
    ```bash
    python manage.py migrate
    ```
 
-6. **Create a superuser:**
+5. **Create a superuser:**
    ```bash
    python manage.py createsuperuser
    ```
 
-7. **Run the development server:**
+6. **Run the development server:**
    ```bash
    python manage.py runserver
    ```
