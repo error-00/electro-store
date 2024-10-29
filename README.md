@@ -1,6 +1,6 @@
 # Electro Store
 
-Electro Store is an online store built with Django and PostgreSQL. It features a user-friendly interface for browsing and purchasing electronic products, along with an administrative dashboard for managing products, orders, and customers.
+Electro Store is an online store built with Django. It features a user-friendly interface for browsing and purchasing electronic products, along with an administrative dashboard for managing products, orders, and customers.
 
 ## Features
 
